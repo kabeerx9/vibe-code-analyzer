@@ -1,6 +1,6 @@
-import prisma from "@app-starter/db";
-import type { User } from "@app-starter/db/types";
-import type { MeResponse } from "@app-starter/contracts/me";
+import prisma from "@codeaudit/db";
+import type { User } from "@codeaudit/db/types";
+import type { MeResponse } from "@codeaudit/contracts/me";
 import type { UserJSON } from "@clerk/fastify";
 
 export type UserProfileInput = {

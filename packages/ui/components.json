@@ -12,11 +12,11 @@
   },
   "iconLibrary": "lucide",
   "aliases": {
-    "components": "@app-starter/ui/components",
-    "utils": "@app-starter/ui/lib/utils",
-    "hooks": "@app-starter/ui/hooks",
-    "lib": "@app-starter/ui/lib",
-    "ui": "@app-starter/ui/components"
+    "components": "@codeaudit/ui/components",
+    "utils": "@codeaudit/ui/lib/utils",
+    "hooks": "@codeaudit/ui/hooks",
+    "lib": "@codeaudit/ui/lib",
+    "ui": "@codeaudit/ui/components"
   },
   "menuColor": "default",
   "menuAccent": "subtle",

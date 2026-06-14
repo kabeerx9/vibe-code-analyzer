@@ -41,7 +41,7 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>App Starter</Text>
+      <Text style={styles.title}>CodeAudit</Text>
       <Text style={styles.subtitle}>Welcome, {name}</Text>
       <View style={styles.accountCard}>
         <Text style={styles.accountLabel}>Signed-in account</Text>

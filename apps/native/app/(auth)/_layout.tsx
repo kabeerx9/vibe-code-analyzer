@@ -18,7 +18,7 @@ export default function AuthRoutesLayout() {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: true, title: "App Starter" }}>
+    <Stack screenOptions={{ headerShown: true, title: "CodeAudit" }}>
       <Stack.Screen name="sign-in" options={{ title: "Sign in" }} />
       <Stack.Screen name="sign-up" options={{ title: "Sign up" }} />
     </Stack>

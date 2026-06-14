@@ -2,8 +2,8 @@ import { clerkClient, getAuth } from "@clerk/fastify";
 import {
   deleteAccountInputSchema,
   updateAccountInputSchema,
-} from "@app-starter/contracts/account";
-import { meResponseSchema } from "@app-starter/contracts/me";
+} from "@codeaudit/contracts/account";
+import { meResponseSchema } from "@codeaudit/contracts/me";
 import type { FastifyInstance, FastifyRequest } from "fastify";
 
 import {

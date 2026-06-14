@@ -1,4 +1,4 @@
-import { env } from "@app-starter/env/server";
+import { env } from "@codeaudit/env/server";
 import { clerkPlugin } from "@clerk/fastify";
 import fastifyCors from "@fastify/cors";
 import Fastify from "fastify";

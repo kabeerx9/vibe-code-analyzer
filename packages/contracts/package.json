@@ -1,5 +1,5 @@
 {
-  "name": "@app-starter/contracts",
+  "name": "@codeaudit/contracts",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -18,7 +18,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@app-starter/config": "workspace:*",
+    "@codeaudit/config": "workspace:*",
     "tsx": "^4.20.5",
     "typescript": "catalog:"
   }

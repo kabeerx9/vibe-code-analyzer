@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { Button } from "@app-starter/ui/components/button";
+import { Button } from "@codeaudit/ui/components/button";
 import {
   Card,
   CardContent,
@@ -8,10 +8,10 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@app-starter/ui/components/card";
-import { Input } from "@app-starter/ui/components/input";
-import { Label } from "@app-starter/ui/components/label";
-import type { ExampleProject } from "@app-starter/contracts";
+} from "@codeaudit/ui/components/card";
+import { Input } from "@codeaudit/ui/components/input";
+import { Label } from "@codeaudit/ui/components/label";
+import type { ExampleProject } from "@codeaudit/contracts";
 
 import {
   ApiError,

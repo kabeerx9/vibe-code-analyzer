@@ -5,7 +5,7 @@ import {
   exampleProjectListSchema,
   exampleProjectSchema,
   updateExampleProjectInputSchema,
-} from "@app-starter/contracts/example-projects";
+} from "@codeaudit/contracts/example-projects";
 import type { FastifyInstance, FastifyRequest } from "fastify";
 
 import {

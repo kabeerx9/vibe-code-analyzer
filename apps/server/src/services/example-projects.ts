@@ -1,11 +1,11 @@
-import prisma from "@app-starter/db";
-import type { ExampleProject as DbExampleProject } from "@app-starter/db/types";
+import prisma from "@codeaudit/db";
+import type { ExampleProject as DbExampleProject } from "@codeaudit/db/types";
 import type {
   CreateExampleProjectInput,
   ExampleProject,
   UpdateExampleProjectInput,
-} from "@app-starter/contracts/example-projects";
-import { exampleProjectSchema } from "@app-starter/contracts/example-projects";
+} from "@codeaudit/contracts/example-projects";
+import { exampleProjectSchema } from "@codeaudit/contracts/example-projects";
 
 import {
   getOrCreateUserByClerkId,

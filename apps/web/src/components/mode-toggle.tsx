@@ -1,10 +1,10 @@
-import { Button } from "@app-starter/ui/components/button";
+import { Button } from "@codeaudit/ui/components/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@app-starter/ui/components/dropdown-menu";
+} from "@codeaudit/ui/components/dropdown-menu";
 import { Moon, Sun } from "lucide-react";
 
 import { useTheme } from "@/components/theme-provider";

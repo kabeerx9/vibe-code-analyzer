@@ -1,4 +1,4 @@
-import { env } from "@app-starter/env/native";
+import { env } from "@codeaudit/env/native";
 import { ClerkProvider } from "@clerk/expo";
 import { tokenCache } from "@clerk/expo/token-cache";
 import { Stack } from "expo-router";

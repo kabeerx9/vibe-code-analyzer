@@ -8,7 +8,7 @@ import {
   TextInput,
   View,
 } from "react-native";
-import type { ExampleProject } from "@app-starter/contracts";
+import type { ExampleProject } from "@codeaudit/contracts";
 
 import {
   ApiError,

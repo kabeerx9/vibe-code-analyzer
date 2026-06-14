@@ -14,8 +14,8 @@ import {
   type MeResponse,
   type UpdateAccountInput,
   type UpdateExampleProjectInput,
-} from "@app-starter/contracts";
-import { env } from "@app-starter/env/web";
+} from "@codeaudit/contracts";
+import { env } from "@codeaudit/env/web";
 
 import { getClerkAuthToken } from "@/utils/clerk-auth";
 

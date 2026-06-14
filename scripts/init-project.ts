@@ -48,14 +48,23 @@ const TEXT_FILE_ALLOWLIST = [
   "apps/web/src/routes/index.tsx",
   "apps/web/src/routes/sign-up.tsx",
   "apps/web/src/routes/_auth/dashboard.tsx",
+  "apps/web/src/routes/_auth/account.tsx",
+  "apps/web/src/components/example-projects.tsx",
   "apps/server/tsconfig.json",
   "apps/server/tsdown.config.ts",
   "apps/server/src/index.ts",
   "apps/server/src/services/user.ts",
+  "apps/server/src/services/user.test.ts",
+  "apps/server/src/services/example-projects.ts",
+  "apps/server/src/routes/me.ts",
+  "apps/server/src/routes/example-projects.ts",
+  "apps/server/src/routes/account.ts",
   "apps/native/lib/api.ts",
   "apps/native/app/index.tsx",
   "apps/native/app/_layout.tsx",
   "apps/native/app/(auth)/_layout.tsx",
+  "apps/native/components/example-projects.tsx",
+  "packages/contracts/tsconfig.json",
 ] as const;
 
 const ENV_FILE_PAIRS = [

@@ -295,7 +295,7 @@ export function runDoctor(repoRoot: string): { findings: DoctorFinding[]; exitCo
     }
   }
 
-  const prismaClientPath = join(repoRoot, "packages/db/prisma/generated/client");
+  const prismaClientPath = join(repoRoot, "packages/db/prisma/generated/client.ts");
   if (!existsSync(prismaClientPath)) {
     findings.push({
       severity: "info",

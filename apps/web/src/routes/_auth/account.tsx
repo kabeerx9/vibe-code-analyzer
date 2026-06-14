@@ -2,7 +2,7 @@ import { useClerk, useUser } from "@clerk/react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
-import { Button } from "@app-starter/ui/components/button";
+import { Button } from "@codeaudit/ui/components/button";
 import {
   Card,
   CardContent,
@@ -10,9 +10,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@app-starter/ui/components/card";
-import { Input } from "@app-starter/ui/components/input";
-import { Label } from "@app-starter/ui/components/label";
+} from "@codeaudit/ui/components/card";
+import { Input } from "@codeaudit/ui/components/input";
+import { Label } from "@codeaudit/ui/components/label";
 
 import { ApiError, deleteAccount, updateAccount } from "@/lib/api";
 
