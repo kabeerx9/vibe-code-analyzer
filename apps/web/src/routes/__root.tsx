@@ -18,7 +18,7 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
       },
       {
         name: "description",
-        content: "A fullstack TypeScript application starter",
+        content: "AI-powered code analysis platform",
       },
     ],
     links: [
@@ -36,13 +36,15 @@ function RootComponent() {
       <HeadContent />
       <ThemeProvider
         attribute="class"
-        defaultTheme="dark"
+        defaultTheme="light"
         disableTransitionOnChange
         storageKey="vite-ui-theme"
       >
-        <div className="grid grid-rows-[auto_1fr] h-svh">
+        <div className="grid min-h-svh grid-rows-[auto_1fr]">
           <Header />
-          <Outlet />
+          <main>
+            <Outlet />
+          </main>
         </div>
         <Toaster richColors />
       </ThemeProvider>

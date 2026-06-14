@@ -138,8 +138,8 @@ export function ExampleProjectsPanel() {
   return (
     <section className="flex flex-col gap-4">
       <div>
-        <h2 className="text-lg font-semibold">Example projects</h2>
-        <p className="text-sm text-muted-foreground">
+        <h2 className="text-heading-sm text-foreground">Example projects</h2>
+        <p className="text-sm text-steel">
           Reference CRUD flow. Remove this panel when you add your product domain.
         </p>
       </div>

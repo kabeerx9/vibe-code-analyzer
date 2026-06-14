@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   Alert,
   Pressable,
-  StyleSheet,
   Text,
   TextInput,
   View,
@@ -17,6 +16,8 @@ import {
   listExampleProjects,
   updateExampleProject,
 } from "@/lib/api";
+import { colors } from "@codeaudit/ui/theme/tokens";
+import { sharedStyles } from "@/lib/theme";
 
 type FormState = {
   name: string;
@@ -144,116 +145,128 @@ export function ExampleProjectsPanel() {
   }
 
   return (
-    <View style={styles.section}>
-      <Text style={styles.heading}>Example projects</Text>
-      <Text style={styles.subheading}>
+    <View style={{ gap: 12 }}>
+      <Text style={sharedStyles.headingSm}>Example projects</Text>
+      <Text style={sharedStyles.muted}>
         Reference CRUD flow. Remove this panel when you add your product domain.
       </Text>
 
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Create project</Text>
-        <Text style={styles.label}>Name</Text>
+      <View style={sharedStyles.card}>
+        <Text style={sharedStyles.cardTitle}>Create project</Text>
+        <Text style={sharedStyles.label}>Name</Text>
         <TextInput
-          style={styles.input}
+          style={sharedStyles.input}
           value={createForm.name}
           onChangeText={(name) => setCreateForm((current) => ({ ...current, name }))}
           editable={!mutating}
+          placeholderTextColor={colors.stone}
           accessibilityLabel="Project name"
         />
-        <Text style={styles.label}>Description</Text>
+        <Text style={sharedStyles.label}>Description</Text>
         <TextInput
-          style={styles.input}
+          style={sharedStyles.input}
           value={createForm.description}
           onChangeText={(description) => setCreateForm((current) => ({ ...current, description }))}
           editable={!mutating}
+          placeholderTextColor={colors.stone}
           accessibilityLabel="Project description"
         />
         <Pressable
-          style={[styles.button, mutating && styles.buttonDisabled]}
+          style={[sharedStyles.buttonPrimary, mutating && sharedStyles.buttonDisabled]}
           disabled={mutating}
           onPress={() => void handleCreate()}
         >
-          <Text style={styles.buttonText}>{mutating ? "Saving..." : "Create project"}</Text>
+          <Text style={sharedStyles.buttonPrimaryText}>
+            {mutating ? "Saving..." : "Create project"}
+          </Text>
         </Pressable>
       </View>
 
       {loading ? (
-        <View style={styles.centeredRow}>
-          <ActivityIndicator />
-          <Text style={styles.mutedText}>Loading projects...</Text>
+        <View style={sharedStyles.row}>
+          <ActivityIndicator color={colors.primary} />
+          <Text style={sharedStyles.muted}>Loading projects...</Text>
         </View>
       ) : error ? (
-        <View style={styles.errorCard}>
-          <Text style={styles.errorText}>{error}</Text>
-          <Pressable style={styles.secondaryButton} onPress={() => void loadProjects()}>
-            <Text style={styles.secondaryButtonText}>Retry</Text>
+        <View style={[sharedStyles.card, { borderColor: colors.error }]}>
+          <Text style={sharedStyles.errorText}>{error}</Text>
+          <Pressable style={sharedStyles.buttonOutline} onPress={() => void loadProjects()}>
+            <Text style={sharedStyles.buttonOutlineText}>Retry</Text>
           </Pressable>
         </View>
       ) : projects.length === 0 ? (
-        <View style={styles.emptyCard}>
-          <Text style={styles.mutedText}>
+        <View style={sharedStyles.card}>
+          <Text style={sharedStyles.muted}>
             No example projects yet. Create one above to try the authenticated CRUD flow.
           </Text>
         </View>
       ) : (
         projects.map((project) => (
-          <View key={project.id} style={styles.card}>
+          <View key={project.id} style={sharedStyles.card}>
             {editingId === project.id ? (
               <>
-                <Text style={styles.cardTitle}>Edit project</Text>
-                <Text style={styles.label}>Name</Text>
+                <Text style={sharedStyles.cardTitle}>Edit project</Text>
+                <Text style={sharedStyles.label}>Name</Text>
                 <TextInput
-                  style={styles.input}
+                  style={sharedStyles.input}
                   value={editForm.name}
                   onChangeText={(name) => setEditForm((current) => ({ ...current, name }))}
                   editable={!mutating}
+                  placeholderTextColor={colors.stone}
                   accessibilityLabel="Edit project name"
                 />
-                <Text style={styles.label}>Description</Text>
+                <Text style={sharedStyles.label}>Description</Text>
                 <TextInput
-                  style={styles.input}
+                  style={sharedStyles.input}
                   value={editForm.description}
                   onChangeText={(description) =>
                     setEditForm((current) => ({ ...current, description }))
                   }
                   editable={!mutating}
+                  placeholderTextColor={colors.stone}
                   accessibilityLabel="Edit project description"
                 />
-                <View style={styles.row}>
+                <View style={sharedStyles.row}>
                   <Pressable
-                    style={[styles.button, mutating && styles.buttonDisabled]}
+                    style={[sharedStyles.buttonPrimary, mutating && sharedStyles.buttonDisabled]}
                     disabled={mutating}
                     onPress={() => void handleUpdate()}
                   >
-                    <Text style={styles.buttonText}>{mutating ? "Saving..." : "Save changes"}</Text>
+                    <Text style={sharedStyles.buttonPrimaryText}>
+                      {mutating ? "Saving..." : "Save changes"}
+                    </Text>
                   </Pressable>
                   <Pressable
-                    style={[styles.secondaryButton, mutating && styles.buttonDisabled]}
+                    style={[sharedStyles.buttonOutline, mutating && sharedStyles.buttonDisabled]}
                     disabled={mutating}
                     onPress={cancelEdit}
                   >
-                    <Text style={styles.secondaryButtonText}>Cancel</Text>
+                    <Text style={sharedStyles.buttonOutlineText}>Cancel</Text>
                   </Pressable>
                 </View>
               </>
             ) : (
               <>
-                <Text style={styles.cardTitle}>{project.name}</Text>
-                <Text style={styles.mutedText}>{project.description ?? "No description"}</Text>
-                <View style={styles.row}>
+                <Text style={sharedStyles.cardTitle}>{project.name}</Text>
+                <Text style={sharedStyles.muted}>{project.description ?? "No description"}</Text>
+                <View style={sharedStyles.row}>
                   <Pressable
-                    style={[styles.secondaryButton, mutating && styles.buttonDisabled]}
+                    style={[sharedStyles.buttonOutline, mutating && sharedStyles.buttonDisabled]}
                     disabled={mutating}
                     onPress={() => startEdit(project)}
                   >
-                    <Text style={styles.secondaryButtonText}>Edit</Text>
+                    <Text style={sharedStyles.buttonOutlineText}>Edit</Text>
                   </Pressable>
                   <Pressable
-                    style={[styles.destructiveButton, mutating && styles.buttonDisabled]}
+                    style={[
+                      sharedStyles.buttonPrimary,
+                      { backgroundColor: colors.error },
+                      mutating && sharedStyles.buttonDisabled,
+                    ]}
                     disabled={mutating}
                     onPress={() => confirmDelete(project)}
                   >
-                    <Text style={styles.destructiveButtonText}>Delete</Text>
+                    <Text style={sharedStyles.buttonPrimaryText}>Delete</Text>
                   </Pressable>
                 </View>
               </>
@@ -262,110 +275,7 @@ export function ExampleProjectsPanel() {
         ))
       )}
 
-      {actionError ? <Text style={styles.errorText}>{actionError}</Text> : null}
+      {actionError ? <Text style={sharedStyles.errorText}>{actionError}</Text> : null}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  section: {
-    gap: 12,
-  },
-  heading: {
-    fontSize: 18,
-    fontWeight: "700",
-  },
-  subheading: {
-    fontSize: 14,
-    opacity: 0.7,
-  },
-  card: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 12,
-    padding: 16,
-    gap: 8,
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: "500",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    fontSize: 16,
-  },
-  button: {
-    backgroundColor: "#111827",
-    borderRadius: 8,
-    paddingVertical: 12,
-    alignItems: "center",
-  },
-  buttonDisabled: {
-    opacity: 0.5,
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "600",
-  },
-  secondaryButton: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    alignItems: "center",
-  },
-  secondaryButtonText: {
-    fontWeight: "600",
-  },
-  destructiveButton: {
-    backgroundColor: "#fee2e2",
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    alignItems: "center",
-  },
-  destructiveButtonText: {
-    color: "#b91c1c",
-    fontWeight: "600",
-  },
-  row: {
-    flexDirection: "row",
-    gap: 8,
-    flexWrap: "wrap",
-  },
-  centeredRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  mutedText: {
-    fontSize: 14,
-    opacity: 0.7,
-  },
-  emptyCard: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 12,
-    padding: 16,
-  },
-  errorCard: {
-    borderWidth: 1,
-    borderColor: "#fecaca",
-    borderRadius: 12,
-    padding: 16,
-    gap: 8,
-  },
-  errorText: {
-    color: "#dc2626",
-    fontSize: 14,
-  },
-});

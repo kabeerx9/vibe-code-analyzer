@@ -1,9 +1,11 @@
 import { useAuth, useSignUp } from "@clerk/expo";
 import { type Href, Link, useRouter } from "expo-router";
 import React from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { GoogleSignInButton } from "@/components/google-sign-in-button";
+import { colors } from "@codeaudit/ui/theme/tokens";
+import { sharedStyles } from "@/lib/theme";
 
 function pushDecoratedUrl(
   router: ReturnType<typeof useRouter>,
@@ -76,164 +78,91 @@ export default function Page() {
     signUp.missingFields.length === 0
   ) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Verify your account</Text>
-        {statusMessage && <Text style={styles.helper}>{statusMessage}</Text>}
+      <ScrollView style={sharedStyles.screenPadded}>
+        <Text style={sharedStyles.headingSm}>Verify your account</Text>
+        {statusMessage && <Text style={sharedStyles.muted}>{statusMessage}</Text>}
         <TextInput
-          style={styles.input}
+          style={sharedStyles.input}
           value={code}
           placeholder="Enter your verification code"
-          placeholderTextColor="#666666"
+          placeholderTextColor={colors.stone}
           onChangeText={(value) => setCode(value)}
           keyboardType="numeric"
         />
-        {errors.fields.code && <Text style={styles.error}>{errors.fields.code.message}</Text>}
+        {errors.fields.code && <Text style={sharedStyles.errorText}>{errors.fields.code.message}</Text>}
         <Pressable
           style={({ pressed }) => [
-            styles.button,
-            fetchStatus === "fetching" && styles.buttonDisabled,
-            pressed && styles.buttonPressed,
+            sharedStyles.buttonPrimary,
+            fetchStatus === "fetching" && sharedStyles.buttonDisabled,
+            pressed && sharedStyles.buttonPressed,
           ]}
           onPress={handleVerify}
           disabled={fetchStatus === "fetching"}
         >
-          <Text style={styles.buttonText}>Verify</Text>
+          <Text style={sharedStyles.buttonPrimaryText}>Verify</Text>
         </Pressable>
         <Pressable
-          style={({ pressed }) => [styles.secondaryButton, pressed && styles.buttonPressed]}
+          style={({ pressed }) => [pressed && sharedStyles.buttonPressed]}
           onPress={() => signUp.verifications.sendEmailCode()}
         >
-          <Text style={styles.secondaryButtonText}>I need a new code</Text>
+          <Text style={[sharedStyles.muted, { fontWeight: "600" }]}>I need a new code</Text>
         </Pressable>
-      </View>
+      </ScrollView>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign up</Text>
-      {statusMessage && <Text style={styles.helper}>{statusMessage}</Text>}
+    <ScrollView style={sharedStyles.screenPadded} contentContainerStyle={{ gap: 12 }}>
+      <View style={{ gap: 8, marginBottom: 8 }}>
+        <Text style={sharedStyles.headingLg}>Create your account</Text>
+        <Text style={sharedStyles.subtitle}>Start analyzing code with confidence.</Text>
+      </View>
+      {statusMessage && <Text style={sharedStyles.muted}>{statusMessage}</Text>}
       <GoogleSignInButton />
-      <Text style={styles.divider}>or</Text>
-      <Text style={styles.label}>Email address</Text>
+      <Text style={[sharedStyles.muted, { textAlign: "center" }]}>or</Text>
+      <Text style={sharedStyles.label}>Email address</Text>
       <TextInput
-        style={styles.input}
+        style={sharedStyles.input}
         autoCapitalize="none"
         value={emailAddress}
         placeholder="Enter email"
-        placeholderTextColor="#666666"
+        placeholderTextColor={colors.stone}
         onChangeText={(value) => setEmailAddress(value)}
         keyboardType="email-address"
       />
       {errors.fields.emailAddress && (
-        <Text style={styles.error}>{errors.fields.emailAddress.message}</Text>
+        <Text style={sharedStyles.errorText}>{errors.fields.emailAddress.message}</Text>
       )}
-      <Text style={styles.label}>Password</Text>
+      <Text style={sharedStyles.label}>Password</Text>
       <TextInput
-        style={styles.input}
+        style={sharedStyles.input}
         value={password}
         placeholder="Enter password"
-        placeholderTextColor="#666666"
+        placeholderTextColor={colors.stone}
         secureTextEntry={true}
         onChangeText={(value) => setPassword(value)}
       />
-      {errors.fields.password && <Text style={styles.error}>{errors.fields.password.message}</Text>}
+      {errors.fields.password && (
+        <Text style={sharedStyles.errorText}>{errors.fields.password.message}</Text>
+      )}
       <Pressable
         style={({ pressed }) => [
-          styles.button,
-          (!emailAddress || !password || fetchStatus === "fetching") && styles.buttonDisabled,
-          pressed && styles.buttonPressed,
+          sharedStyles.buttonPrimary,
+          (!emailAddress || !password || fetchStatus === "fetching") && sharedStyles.buttonDisabled,
+          pressed && sharedStyles.buttonPressed,
         ]}
         onPress={handleSubmit}
         disabled={!emailAddress || !password || fetchStatus === "fetching"}
       >
-        <Text style={styles.buttonText}>Sign up</Text>
+        <Text style={sharedStyles.buttonPrimaryText}>Sign up</Text>
       </Pressable>
-      <View style={styles.linkContainer}>
-        <Text>Already have an account? </Text>
+      <View style={sharedStyles.row}>
+        <Text style={sharedStyles.muted}>Already have an account? </Text>
         <Link href="/sign-in">
-          <Text style={styles.linkText}>Sign in</Text>
+          <Text style={[sharedStyles.label, { color: colors.ink }]}>Sign in</Text>
         </Link>
       </View>
       <View nativeID="clerk-captcha" />
-    </View>
+    </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    gap: 12,
-  },
-  title: {
-    marginBottom: 8,
-    fontSize: 24,
-    fontWeight: "700",
-  },
-  label: {
-    fontWeight: "600",
-    fontSize: 14,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    backgroundColor: "#fff",
-  },
-  button: {
-    backgroundColor: "#0a7ea4",
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 8,
-  },
-  buttonPressed: {
-    opacity: 0.7,
-  },
-  buttonDisabled: {
-    opacity: 0.5,
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "600",
-  },
-  secondaryButton: {
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 8,
-  },
-  secondaryButtonText: {
-    color: "#0a7ea4",
-    fontWeight: "600",
-  },
-  linkContainer: {
-    flexDirection: "row",
-    gap: 4,
-    marginTop: 12,
-    alignItems: "center",
-  },
-  linkText: {
-    color: "#0a7ea4",
-    fontWeight: "600",
-  },
-  error: {
-    color: "#d32f2f",
-    fontSize: 12,
-    marginTop: -8,
-  },
-  helper: {
-    color: "#555555",
-    fontSize: 13,
-  },
-  divider: {
-    textAlign: "center",
-    opacity: 0.5,
-    marginVertical: 4,
-  },
-});

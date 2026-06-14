@@ -1,11 +1,13 @@
 import { useAuth, useUser } from "@clerk/expo";
-import { Link, Redirect } from "expo-router";
+import { Redirect } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 
 import { SignOutButton } from "@/components/sign-out-button";
 import { ExampleProjectsPanel } from "@/components/example-projects";
 import { ApiError, getMe, type MeResponse } from "@/lib/api";
+import { colors } from "@codeaudit/ui/theme/tokens";
+import { sharedStyles } from "@/lib/theme";
 
 export default function Home() {
   const { isLoaded, isSignedIn } = useAuth();
@@ -27,8 +29,8 @@ export default function Home() {
 
   if (!isLoaded) {
     return (
-      <View style={styles.centered}>
-        <ActivityIndicator />
+      <View style={sharedStyles.centered}>
+        <ActivityIndicator color={colors.primary} />
       </View>
     );
   }
@@ -40,68 +42,39 @@ export default function Home() {
   const name = user?.fullName || user?.firstName || "there";
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>CodeAudit</Text>
-      <Text style={styles.subtitle}>Welcome, {name}</Text>
-      <View style={styles.accountCard}>
-        <Text style={styles.accountLabel}>Signed-in account</Text>
-        <Text style={styles.accountValue}>{me?.email ?? "Loading..."}</Text>
-        {error ? <Text style={styles.errorText}>{error}</Text> : null}
+    <ScrollView style={sharedStyles.screen} contentContainerStyle={{ padding: 24, gap: 24 }}>
+      <View style={{ gap: 8 }}>
+        <Text style={sharedStyles.headingLg}>Welcome back, {name}</Text>
+        <Text style={sharedStyles.subtitle}>Your AI-powered code analysis workspace.</Text>
       </View>
+
+      <View style={{ gap: 12 }}>
+        <View style={sharedStyles.productCardCoral}>
+          <Text style={sharedStyles.productCardText}>Analyze</Text>
+          <Text style={sharedStyles.productCardSubtext}>Deep code intelligence</Text>
+        </View>
+        <View style={sharedStyles.productCardMagenta}>
+          <Text style={sharedStyles.productCardText}>Review</Text>
+          <Text style={sharedStyles.productCardSubtext}>Automated PR insights</Text>
+        </View>
+        <View style={sharedStyles.productCardBlue}>
+          <Text style={sharedStyles.productCardText}>Secure</Text>
+          <Text style={sharedStyles.productCardSubtext}>Security vulnerability scan</Text>
+        </View>
+        <View style={sharedStyles.productCardPurple}>
+          <Text style={sharedStyles.productCardText}>Ship</Text>
+          <Text style={sharedStyles.productCardSubtext}>Quality gates & metrics</Text>
+        </View>
+      </View>
+
+      <View style={sharedStyles.cardSurface}>
+        <Text style={sharedStyles.muted}>Signed-in account</Text>
+        <Text style={sharedStyles.cardTitle}>{me?.email ?? "Loading..."}</Text>
+        {error ? <Text style={sharedStyles.errorText}>{error}</Text> : null}
+      </View>
+
       <ExampleProjectsPanel />
-      <Link href="/account" style={styles.accountLink}>
-        <Text style={styles.accountLinkText}>Account</Text>
-      </Link>
       <SignOutButton />
-    </View>
+    </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  centered: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  container: {
-    flex: 1,
-    padding: 24,
-    gap: 16,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "700",
-  },
-  subtitle: {
-    fontSize: 16,
-    opacity: 0.7,
-  },
-  accountCard: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 12,
-    padding: 16,
-    gap: 4,
-  },
-  accountLabel: {
-    fontSize: 14,
-    opacity: 0.7,
-  },
-  accountValue: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  errorText: {
-    marginTop: 8,
-    color: "#dc2626",
-    fontSize: 14,
-  },
-  accountLink: {
-    alignSelf: "flex-start",
-  },
-  accountLinkText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#2563eb",
-  },
-});

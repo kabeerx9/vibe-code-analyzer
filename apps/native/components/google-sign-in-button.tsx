@@ -1,7 +1,9 @@
 import { useSSO } from "@clerk/expo";
 import * as AuthSession from "expo-auth-session";
 import { useRouter } from "expo-router";
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Pressable, Text } from "react-native";
+
+import { sharedStyles } from "@/lib/theme";
 
 export function GoogleSignInButton() {
   const { startSSOFlow } = useSSO();
@@ -24,26 +26,14 @@ export function GoogleSignInButton() {
   };
 
   return (
-    <Pressable style={({ pressed }) => [styles.button, pressed && styles.pressed]} onPress={onPress}>
-      <Text style={styles.text}>Continue with Google</Text>
+    <Pressable
+      style={({ pressed }) => [
+        sharedStyles.buttonOutline,
+        pressed && sharedStyles.buttonPressed,
+      ]}
+      onPress={onPress}
+    >
+      <Text style={sharedStyles.buttonOutlineText}>Continue with Google</Text>
     </Pressable>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    alignItems: "center",
-  },
-  pressed: {
-    opacity: 0.7,
-  },
-  text: {
-    fontWeight: "600",
-    fontSize: 16,
-  },
-});

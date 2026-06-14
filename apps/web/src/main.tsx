@@ -19,8 +19,8 @@ const router = createRouter({
         publishableKey={env.VITE_CLERK_PUBLISHABLE_KEY}
         signInUrl="/"
         signUpUrl="/sign-up"
-        signInFallbackRedirectUrl="/dashboard"
-        signUpFallbackRedirectUrl="/dashboard"
+        signInFallbackRedirectUrl="/home"
+        signUpFallbackRedirectUrl="/home"
       >
         <ClerkAuthSetup>{children}</ClerkAuthSetup>
       </ClerkProvider>

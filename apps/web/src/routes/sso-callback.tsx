@@ -9,8 +9,8 @@ function SSOCallbackPage() {
   return (
     <>
       <AuthenticateWithRedirectCallback
-        signInFallbackRedirectUrl="/dashboard"
-        signUpFallbackRedirectUrl="/dashboard"
+        signInFallbackRedirectUrl="/home"
+        signUpFallbackRedirectUrl="/home"
       />
       <div id="clerk-captcha" />
     </>

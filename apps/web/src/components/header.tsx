@@ -1,30 +1,41 @@
 import { useAuth } from "@clerk/react";
 import { Link } from "@tanstack/react-router";
 
-import { ModeToggle } from "./mode-toggle";
+import { buttonVariants } from "@codeaudit/ui/components/button";
+import { cn } from "@codeaudit/ui/lib/utils";
 
 export default function Header() {
   const { isSignedIn } = useAuth();
 
   return (
-    <div>
-      <div className="flex flex-row items-center justify-between px-4 py-2">
-        <Link to="/" className="text-lg font-semibold">
+    <header className="sticky top-0 z-50 border-b border-border bg-background">
+      <div className="container-marketing flex h-16 items-center justify-between">
+        <Link
+          to={isSignedIn ? "/home" : "/"}
+          className="text-lg font-semibold tracking-tight text-foreground"
+        >
           CodeAudit
         </Link>
-        <div className="flex items-center gap-4">
+        <nav className="flex items-center gap-3">
           {isSignedIn ? (
-            <>
-              <Link to="/dashboard">Dashboard</Link>
-              <Link to="/account">Account</Link>
-            </>
+            <Link
+              to="/home"
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+            >
+              Home
+            </Link>
           ) : (
-            <Link to="/sign-up">Sign up</Link>
+            <>
+              <Link to="/" className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}>
+                Sign in
+              </Link>
+              <Link to="/sign-up" className={cn(buttonVariants({ size: "sm" }))}>
+                Sign up
+              </Link>
+            </>
           )}
-          <ModeToggle />
-        </div>
+        </nav>
       </div>
-      <hr />
-    </div>
+    </header>
   );
 }

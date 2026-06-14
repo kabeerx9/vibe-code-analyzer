@@ -1,6 +1,8 @@
 import { useClerk } from "@clerk/expo";
 import { useRouter } from "expo-router";
-import { Text, TouchableOpacity } from "react-native";
+import { Pressable, Text } from "react-native";
+
+import { sharedStyles } from "@/lib/theme";
 
 export const SignOutButton = () => {
   const { signOut } = useClerk();
@@ -16,8 +18,11 @@ export const SignOutButton = () => {
   };
 
   return (
-    <TouchableOpacity onPress={handleSignOut}>
-      <Text>Sign out</Text>
-    </TouchableOpacity>
+    <Pressable
+      style={({ pressed }) => [sharedStyles.buttonOutline, pressed && sharedStyles.buttonPressed]}
+      onPress={handleSignOut}
+    >
+      <Text style={sharedStyles.buttonOutlineText}>Sign out</Text>
+    </Pressable>
   );
 };
