@@ -47,6 +47,20 @@ function formatAnalysis(repository: Repository): string {
   return run.score === null ? run.status : `${run.status} · ${run.score}/100`;
 }
 
+function formatSeveritySummary(repository: Repository): string {
+  const run = repository.latestAnalysisRun;
+  if (!run) {
+    return "Run analysis to generate findings";
+  }
+
+  return [
+    `${run.criticalCount} critical`,
+    `${run.highCount} high`,
+    `${run.mediumCount} medium`,
+    `${run.lowCount} low`,
+  ].join(" · ");
+}
+
 export function RepositoriesPanel() {
   const [repositories, setRepositories] = useState<Repository[]>([]);
   const [loading, setLoading] = useState(true);
@@ -339,8 +353,27 @@ export function RepositoriesPanel() {
                 {repository.latestAnalysisRun?.summary ? (
                   <Text style={sharedStyles.muted}>{repository.latestAnalysisRun.summary}</Text>
                 ) : null}
-                {repository.branch ? (
-                  <Text style={sharedStyles.muted}>Branch: {repository.branch}</Text>
+                <Text style={sharedStyles.label}>Findings</Text>
+                <Text style={sharedStyles.muted}>{formatSeveritySummary(repository)}</Text>
+                {repository.latestAnalysisRun?.findings.length ? (
+                  repository.latestAnalysisRun.findings.slice(0, 3).map((finding) => (
+                    <View key={`${finding.severity}-${finding.title}`} style={sharedStyles.cardSurface}>
+                      <Text style={sharedStyles.cardTitle}>
+                        {finding.severity}: {finding.title}
+                      </Text>
+                      <Text style={sharedStyles.muted}>{finding.recommendation}</Text>
+                    </View>
+                  ))
+                ) : null}
+                {repository.latestAnalysisRun?.branch ?? repository.branch ? (
+                  <Text style={sharedStyles.muted}>
+                    Branch: {repository.latestAnalysisRun?.branch ?? repository.branch}
+                  </Text>
+                ) : null}
+                {repository.latestAnalysisRun?.durationMs !== null && repository.latestAnalysisRun?.durationMs !== undefined ? (
+                  <Text style={sharedStyles.muted}>
+                    Duration: {repository.latestAnalysisRun.durationMs}ms
+                  </Text>
                 ) : null}
                 <View style={sharedStyles.row}>
                   <Pressable

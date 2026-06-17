@@ -22,8 +22,8 @@ Fields:
 ## AnalysisRun
 
 An analysis run belongs to a repository. The first implementation records a
-completed stub result so the product can exercise the database, API contract,
-web UI, and native UI before scanner/provider integration.
+completed local analyzer result so the product can exercise the database, API
+contract, web UI, and native UI before scanner/provider integration.
 
 Fields:
 
@@ -32,6 +32,15 @@ Fields:
 - `status`
 - `summary`
 - `score`
+- `commitSha`
+- `branch`
+- `durationMs`
+- `criticalCount`
+- `highCount`
+- `mediumCount`
+- `lowCount`
+- `findings`
+- `failureReason`
 - `completedAt`
 - `createdAt`
 - `updatedAt`
@@ -46,6 +55,7 @@ Fields:
 
 ## Next Integration Step
 
-Replace the stub in `apps/server/src/services/repositories.ts` with a scanner
-adapter. Keep the route contract stable: enqueue or execute the scan behind
-`createAnalysisRunByClerkId`, then return an `AnalysisRun`.
+Replace or extend the local adapter in `apps/server/src/services/analyzer.ts`.
+Keep the route contract stable: enqueue or execute the scan behind
+`createAnalysisRunByClerkId`, persist the structured result, then return an
+`AnalysisRun`.

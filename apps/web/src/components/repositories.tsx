@@ -49,6 +49,20 @@ function formatAnalysis(repository: Repository): string {
   return run.score === null ? run.status : `${run.status} · ${run.score}/100`;
 }
 
+function formatSeveritySummary(repository: Repository): string {
+  const run = repository.latestAnalysisRun;
+  if (!run) {
+    return "Run analysis to generate findings";
+  }
+
+  return [
+    `${run.criticalCount} critical`,
+    `${run.highCount} high`,
+    `${run.mediumCount} medium`,
+    `${run.lowCount} low`,
+  ].join(" · ");
+}
+
 export function RepositoriesPanel() {
   const [repositories, setRepositories] = useState<Repository[]>([]);
   const [loading, setLoading] = useState(true);
@@ -348,9 +362,32 @@ export function RepositoriesPanel() {
                       {repository.latestAnalysisRun?.summary ? (
                         <p className="text-muted-foreground">{repository.latestAnalysisRun.summary}</p>
                       ) : null}
-                      {repository.branch ? (
-                        <p className="text-muted-foreground">Branch: {repository.branch}</p>
+                      <div className="rounded-lg border border-border p-3">
+                        <p className="text-xs font-medium uppercase text-muted-foreground">
+                          Findings
+                        </p>
+                        <p className="mt-1 text-foreground">{formatSeveritySummary(repository)}</p>
+                      </div>
+                      {repository.latestAnalysisRun?.findings.length ? (
+                        <ul className="flex flex-col gap-2">
+                          {repository.latestAnalysisRun.findings.slice(0, 3).map((finding) => (
+                            <li key={`${finding.severity}-${finding.title}`} className="rounded-lg border border-border p-3">
+                              <p className="font-medium text-foreground">
+                                {finding.severity}: {finding.title}
+                              </p>
+                              <p className="mt-1 text-muted-foreground">{finding.recommendation}</p>
+                            </li>
+                          ))}
+                        </ul>
                       ) : null}
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 text-muted-foreground">
+                        {repository.latestAnalysisRun?.branch ?? repository.branch ? (
+                          <span>Branch: {repository.latestAnalysisRun?.branch ?? repository.branch}</span>
+                        ) : null}
+                        {repository.latestAnalysisRun?.durationMs !== null && repository.latestAnalysisRun?.durationMs !== undefined ? (
+                          <span>Duration: {repository.latestAnalysisRun.durationMs}ms</span>
+                        ) : null}
+                      </div>
                     </CardContent>
                     <CardFooter className="gap-2">
                       <Button

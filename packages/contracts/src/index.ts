@@ -7,13 +7,17 @@ export {
 } from "./account";
 export {
   analysisRunSchema,
+  analysisFindingSchema,
+  analysisSeveritySchema,
   analysisStatusSchema,
   createRepositoryInputSchema,
   repositoryIdParamsSchema,
   repositoryListSchema,
   repositorySchema,
   updateRepositoryInputSchema,
+  type AnalysisFinding,
   type AnalysisRun,
+  type AnalysisSeverity,
   type AnalysisStatus,
   type CreateRepositoryInput,
   type Repository,

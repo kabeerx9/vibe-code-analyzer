@@ -31,6 +31,18 @@ const optionalDescriptionSchema = z
 
 export const analysisStatusSchema = z.enum(["PENDING", "RUNNING", "COMPLETED", "FAILED"]);
 
+export const analysisSeveritySchema = z.enum(["CRITICAL", "HIGH", "MEDIUM", "LOW"]);
+
+export const analysisFindingSchema = z
+  .object({
+    severity: analysisSeveritySchema,
+    title: z.string(),
+    description: z.string(),
+    path: z.string().nullable(),
+    recommendation: z.string(),
+  })
+  .strict();
+
 export const analysisRunSchema = z
   .object({
     id: z.string(),
@@ -38,6 +50,15 @@ export const analysisRunSchema = z
     status: analysisStatusSchema,
     summary: z.string().nullable(),
     score: z.number().int().min(0).max(100).nullable(),
+    commitSha: z.string().nullable(),
+    branch: z.string().nullable(),
+    durationMs: z.number().int().nonnegative().nullable(),
+    criticalCount: z.number().int().nonnegative(),
+    highCount: z.number().int().nonnegative(),
+    mediumCount: z.number().int().nonnegative(),
+    lowCount: z.number().int().nonnegative(),
+    findings: z.array(analysisFindingSchema),
+    failureReason: z.string().nullable(),
     completedAt: z.iso.datetime().nullable(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
@@ -89,6 +110,8 @@ export const repositoryIdParamsSchema = z.object({
 });
 
 export type AnalysisStatus = z.infer<typeof analysisStatusSchema>;
+export type AnalysisSeverity = z.infer<typeof analysisSeveritySchema>;
+export type AnalysisFinding = z.infer<typeof analysisFindingSchema>;
 export type AnalysisRun = z.infer<typeof analysisRunSchema>;
 export type Repository = z.infer<typeof repositorySchema>;
 export type RepositoryList = z.infer<typeof repositoryListSchema>;

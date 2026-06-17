@@ -44,6 +44,15 @@ model AnalysisRun {
   status       AnalysisStatus @default(PENDING)
   summary      String?
   score        Int?
+  commitSha    String?
+  branch       String?
+  durationMs   Int?
+  criticalCount Int       @default(0)
+  highCount     Int       @default(0)
+  mediumCount   Int       @default(0)
+  lowCount      Int       @default(0)
+  findings      Json?
+  failureReason String?
   completedAt  DateTime?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt

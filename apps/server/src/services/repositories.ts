@@ -9,6 +9,10 @@ import type {
 import { analysisRunSchema, repositorySchema } from "@codeaudit/contracts/repositories";
 
 import {
+  localRepositoryAnalyzer,
+  type RepositoryAnalyzer,
+} from "@/services/analyzer";
+import {
   getOrCreateUserByClerkId,
   type UserProfileInput,
 } from "@/services/user";
@@ -33,6 +37,11 @@ export type RepositoriesService = {
   createAnalysisRunByClerkId: (clerkId: string, repositoryId: string) => Promise<AnalysisRun | null>;
 };
 
+function parseFindings(value: unknown): AnalysisRun["findings"] {
+  const parsed = analysisRunSchema.shape.findings.safeParse(value);
+  return parsed.success ? parsed.data : [];
+}
+
 function serializeAnalysisRun(run: DbAnalysisRun): AnalysisRun {
   return analysisRunSchema.parse({
     id: run.id,
@@ -40,6 +49,15 @@ function serializeAnalysisRun(run: DbAnalysisRun): AnalysisRun {
     status: run.status,
     summary: run.summary,
     score: run.score,
+    commitSha: run.commitSha,
+    branch: run.branch,
+    durationMs: run.durationMs,
+    criticalCount: run.criticalCount,
+    highCount: run.highCount,
+    mediumCount: run.mediumCount,
+    lowCount: run.lowCount,
+    findings: parseFindings(run.findings),
+    failureReason: run.failureReason,
     completedAt: run.completedAt?.toISOString() ?? null,
     createdAt: run.createdAt.toISOString(),
     updatedAt: run.updatedAt.toISOString(),
@@ -140,21 +158,33 @@ export async function deleteRepositoryByClerkId(
 export async function createAnalysisRunByClerkId(
   clerkId: string,
   repositoryId: string,
+  analyzer: RepositoryAnalyzer = localRepositoryAnalyzer,
 ): Promise<AnalysisRun | null> {
   const repository = await prisma.repository.findFirst({
     where: { id: repositoryId, owner: { clerkId } },
+    include: latestRunInclude,
   });
 
   if (!repository) {
     return null;
   }
 
+  const analysis = await analyzer.analyze(serializeRepository(repository));
+
   const run = await prisma.analysisRun.create({
     data: {
       repositoryId: repository.id,
       status: "COMPLETED",
-      score: 82,
-      summary: `Initial analysis completed for ${repository.name}. Connect a scanner provider to replace this stub result.`,
+      score: analysis.score,
+      summary: analysis.summary,
+      commitSha: analysis.commitSha,
+      branch: analysis.branch,
+      durationMs: analysis.durationMs,
+      criticalCount: analysis.findings.filter((finding) => finding.severity === "CRITICAL").length,
+      highCount: analysis.findings.filter((finding) => finding.severity === "HIGH").length,
+      mediumCount: analysis.findings.filter((finding) => finding.severity === "MEDIUM").length,
+      lowCount: analysis.findings.filter((finding) => finding.severity === "LOW").length,
+      findings: analysis.findings,
       completedAt: new Date(),
     },
   });
