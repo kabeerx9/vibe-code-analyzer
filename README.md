@@ -1,6 +1,6 @@
-# Fullstack Monorepo Starter
+# CodeAudit
 
-A reusable TypeScript starter for web, native, and API projects.
+An AI-powered code analysis workspace built as a TypeScript monorepo.
 
 ## Included
 
@@ -9,15 +9,13 @@ A reusable TypeScript starter for web, native, and API projects.
 - Fastify API
 - Clerk authentication on web, native, and server
 - Clerk webhook user synchronization with JIT fallback
-- Reference authenticated CRUD flow (`ExampleProject`) on web and native
+- Repository tracking and stubbed analysis runs on web and native
 - Prisma 7 and PostgreSQL
 - Shared shadcn/ui package
 - Shared, validated environment configuration
 - Turborepo and pnpm workspaces
 
-## Create A Project
-
-Use GitHub's **Use this template** button, then clone the generated repository.
+## Setup
 
 Install dependencies:
 
@@ -25,55 +23,7 @@ Install dependencies:
 pnpm install
 ```
 
-Initialize the project metadata in one step:
-
-```bash
-pnpm run init:project -- \
-  --name "Acme Tasks" \
-  --slug acme-tasks \
-  --scope acme-tasks \
-  --scheme acme-tasks \
-  --bundle-id com.acme.tasks
-```
-
-`init:project` updates the root package name, workspace scope, Expo identifiers,
-visible branding, and import specifiers across the known starter files. It also
-creates missing `.env` files by copying the matching `.env.example` files.
-
-Options:
-
-- `--name` visible product name
-- `--slug` root package and Expo slug
-- `--scope` npm workspace scope, with or without a leading `@`
-- `--scheme` Expo URL scheme
-- `--bundle-id` iOS bundle identifier and Android package name
-- `--dry-run` print planned changes without writing files
-- `--yes` apply changes without interactive confirmation
-
-Preview changes first:
-
-```bash
-pnpm run init:project -- \
-  --name "Acme Tasks" \
-  --slug acme-tasks \
-  --scope acme-tasks \
-  --scheme acme-tasks \
-  --bundle-id com.acme.tasks \
-  --dry-run
-```
-
-After a scope rename, run:
-
-```bash
-pnpm install
-```
-
-The initializer never provisions Clerk, PostgreSQL, hosting, or app-store
-projects, and it never overwrites an existing `.env` file.
-
-### Manual fallback
-
-If you prefer to customize by hand:
+Create local environment files:
 
 ```bash
 cp apps/server/.env.example apps/server/.env
@@ -81,11 +31,8 @@ cp apps/web/.env.example apps/web/.env
 cp apps/native/.env.example apps/native/.env
 ```
 
-Then rename the root package, `@app-starter/*` workspace scope, Expo metadata,
-and visible branding yourself.
-
-Create a new PostgreSQL database and Clerk application for each project. Replace
-the placeholder values in the three environment files.
+Create a PostgreSQL database and Clerk application. Replace the placeholder
+values in the three environment files.
 
 Run the doctor before database generation and before shipping:
 
@@ -93,9 +40,9 @@ Run the doctor before database generation and before shipping:
 pnpm run doctor
 ```
 
-Doctor checks runtime availability, required environment keys, remaining starter
-identifiers, native metadata consistency, and workspace dependency integrity.
-It reports missing keys only and never prints environment values.
+Doctor checks runtime availability, required environment keys, native metadata
+consistency, and workspace dependency integrity. It reports missing keys only
+and never prints environment values.
 
 Generate the Prisma client and apply the schema:
 
@@ -141,6 +88,7 @@ apps/
   native/    Expo and React Native
   server/    Fastify API
 packages/
+  contracts/ Shared Zod request and response contracts
   config/    Shared TypeScript configuration
   db/        Prisma schema and client
   env/       Validated environment variables
@@ -153,7 +101,6 @@ packages/
 - `pnpm run build`
 - `pnpm run check-types`
 - `pnpm test`
-- `pnpm run init:project`
 - `pnpm run doctor`
 - `pnpm run dev:web`
 - `pnpm run dev:server`
@@ -163,11 +110,11 @@ packages/
 - `pnpm run db:migrate`
 - `pnpm run db:studio`
 
-## Before Shipping A New Product
+## Product Domain
 
-- Run `pnpm run doctor` and resolve required findings.
-- Replace the placeholder branding and dashboard.
-- Remove the reference feature when your product domain is ready. See
-  [docs/reference-feature.md](./docs/reference-feature.md).
-- Use separate Clerk, database, and deployment projects.
-- Never commit real `.env` files.
+CodeAudit tracks authenticated user-owned repositories. Each repository can
+create analysis runs through `POST /api/repositories/:id/analysis-runs`. The
+current analysis implementation is a deterministic local stub so the API,
+database, and UI workflow are stable before scanner or AI-provider integration.
+
+See [docs/product-domain.md](./docs/product-domain.md).

@@ -6,15 +6,19 @@ export {
   type UpdateAccountInput,
 } from "./account";
 export {
-  createExampleProjectInputSchema,
-  exampleProjectIdParamsSchema,
-  exampleProjectListSchema,
-  exampleProjectSchema,
-  updateExampleProjectInputSchema,
-  type CreateExampleProjectInput,
-  type ExampleProject,
-  type ExampleProjectIdParams,
-  type ExampleProjectList,
-  type UpdateExampleProjectInput,
-} from "./example-projects";
+  analysisRunSchema,
+  analysisStatusSchema,
+  createRepositoryInputSchema,
+  repositoryIdParamsSchema,
+  repositoryListSchema,
+  repositorySchema,
+  updateRepositoryInputSchema,
+  type AnalysisRun,
+  type AnalysisStatus,
+  type CreateRepositoryInput,
+  type Repository,
+  type RepositoryIdParams,
+  type RepositoryList,
+  type UpdateRepositoryInput,
+} from "./repositories";
 export { apiErrorResponseSchema, meResponseSchema, type MeResponse } from "./me";

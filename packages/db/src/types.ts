@@ -1,1 +1,1 @@
-export type { ExampleProject, Prisma, User } from "../prisma/generated/client";
+export type { AnalysisRun, Prisma, Repository, User } from "../prisma/generated/client";

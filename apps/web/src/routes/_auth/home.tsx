@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 import { ApiError, getMe, type MeResponse } from "@/lib/api";
-import { ExampleProjectsPanel } from "@/components/example-projects";
+import { RepositoriesPanel } from "@/components/repositories";
 
 export const Route = createFileRoute("/_auth/home")({
   component: HomePage,
@@ -67,7 +67,7 @@ function HomePage() {
         {error ? <p className="mt-2 text-sm text-destructive">{error}</p> : null}
       </div>
 
-      <ExampleProjectsPanel />
+      <RepositoriesPanel />
     </div>
   );
 }

@@ -1,28 +1,29 @@
 import { clerkClient, getAuth } from "@clerk/fastify";
 import {
-  createExampleProjectInputSchema,
-  exampleProjectIdParamsSchema,
-  exampleProjectListSchema,
-  exampleProjectSchema,
-  updateExampleProjectInputSchema,
-} from "@codeaudit/contracts/example-projects";
+  analysisRunSchema,
+  createRepositoryInputSchema,
+  repositoryIdParamsSchema,
+  repositoryListSchema,
+  repositorySchema,
+  updateRepositoryInputSchema,
+} from "@codeaudit/contracts/repositories";
 import type { FastifyInstance, FastifyRequest } from "fastify";
 
 import {
-  defaultExampleProjectsService,
-  type ExampleProjectsService,
-} from "@/services/example-projects";
+  defaultRepositoriesService,
+  type RepositoriesService,
+} from "@/services/repositories";
 import { mapClerkApiUser } from "@/services/user";
 
-export type ExampleProjectsRouteDeps = {
+export type RepositoriesRouteDeps = {
   getAuth: (request: FastifyRequest) => { userId: string | null | undefined };
-  service: ExampleProjectsService;
+  service: RepositoriesService;
   syncFromClerk: (userId: string) => Promise<ReturnType<typeof mapClerkApiUser>>;
 };
 
-const defaultDeps: ExampleProjectsRouteDeps = {
+const defaultDeps: RepositoriesRouteDeps = {
   getAuth,
-  service: defaultExampleProjectsService,
+  service: defaultRepositoriesService,
   syncFromClerk: async (userId) => {
     const clerkUser = await clerkClient.users.getUser(userId);
     return mapClerkApiUser(clerkUser);
@@ -33,13 +34,13 @@ function invalidInputMessage(error: { issues: Array<{ message: string }> }): str
   return error.issues[0]?.message ?? "Invalid input";
 }
 
-export async function registerExampleProjectsRoutes(
+export async function registerRepositoriesRoutes(
   fastify: FastifyInstance,
-  deps: Partial<ExampleProjectsRouteDeps> = {},
+  deps: Partial<RepositoriesRouteDeps> = {},
 ) {
   const { getAuth: getAuthFn, service, syncFromClerk } = { ...defaultDeps, ...deps };
 
-  fastify.get("/api/example-projects", async (request, reply) => {
+  fastify.get("/api/repositories", async (request, reply) => {
     const { userId } = getAuthFn(request);
 
     if (!userId) {
@@ -47,61 +48,61 @@ export async function registerExampleProjectsRoutes(
     }
 
     const items = await service.listByClerkId(userId);
-    return exampleProjectListSchema.parse(items);
+    return repositoryListSchema.parse(items);
   });
 
-  fastify.post("/api/example-projects", async (request, reply) => {
+  fastify.post("/api/repositories", async (request, reply) => {
     const { userId } = getAuthFn(request);
 
     if (!userId) {
       return reply.code(401).send({ error: "Unauthorized" });
     }
 
-    const parsed = createExampleProjectInputSchema.safeParse(request.body);
+    const parsed = createRepositoryInputSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.code(400).send({ error: invalidInputMessage(parsed.error) });
     }
 
-    const project = await service.createByClerkId(userId, parsed.data, () =>
+    const repository = await service.createByClerkId(userId, parsed.data, () =>
       syncFromClerk(userId),
     );
 
-    return reply.code(201).send(exampleProjectSchema.parse(project));
+    return reply.code(201).send(repositorySchema.parse(repository));
   });
 
-  fastify.patch("/api/example-projects/:id", async (request, reply) => {
+  fastify.patch("/api/repositories/:id", async (request, reply) => {
     const { userId } = getAuthFn(request);
 
     if (!userId) {
       return reply.code(401).send({ error: "Unauthorized" });
     }
 
-    const params = exampleProjectIdParamsSchema.safeParse(request.params);
+    const params = repositoryIdParamsSchema.safeParse(request.params);
     if (!params.success) {
       return reply.code(400).send({ error: invalidInputMessage(params.error) });
     }
 
-    const parsed = updateExampleProjectInputSchema.safeParse(request.body);
+    const parsed = updateRepositoryInputSchema.safeParse(request.body);
     if (!parsed.success) {
       return reply.code(400).send({ error: invalidInputMessage(parsed.error) });
     }
 
-    const project = await service.updateByClerkId(userId, params.data.id, parsed.data);
-    if (!project) {
+    const repository = await service.updateByClerkId(userId, params.data.id, parsed.data);
+    if (!repository) {
       return reply.code(404).send({ error: "Not found" });
     }
 
-    return exampleProjectSchema.parse(project);
+    return repositorySchema.parse(repository);
   });
 
-  fastify.delete("/api/example-projects/:id", async (request, reply) => {
+  fastify.delete("/api/repositories/:id", async (request, reply) => {
     const { userId } = getAuthFn(request);
 
     if (!userId) {
       return reply.code(401).send({ error: "Unauthorized" });
     }
 
-    const params = exampleProjectIdParamsSchema.safeParse(request.params);
+    const params = repositoryIdParamsSchema.safeParse(request.params);
     if (!params.success) {
       return reply.code(400).send({ error: invalidInputMessage(params.error) });
     }
@@ -112,5 +113,25 @@ export async function registerExampleProjectsRoutes(
     }
 
     return reply.code(204).send();
+  });
+
+  fastify.post("/api/repositories/:id/analysis-runs", async (request, reply) => {
+    const { userId } = getAuthFn(request);
+
+    if (!userId) {
+      return reply.code(401).send({ error: "Unauthorized" });
+    }
+
+    const params = repositoryIdParamsSchema.safeParse(request.params);
+    if (!params.success) {
+      return reply.code(400).send({ error: invalidInputMessage(params.error) });
+    }
+
+    const run = await service.createAnalysisRunByClerkId(userId, params.data.id);
+    if (!run) {
+      return reply.code(404).send({ error: "Not found" });
+    }
+
+    return reply.code(201).send(analysisRunSchema.parse(run));
   });
 }

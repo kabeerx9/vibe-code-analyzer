@@ -19,18 +19,43 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  exampleProjects ExampleProject[]
+  repositories Repository[]
 }
 
-model ExampleProject {
+model Repository {
   id          String   @id @default(cuid())
   ownerId     String
   name        String
+  url         String?
+  branch      String?
   description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  analysisRuns AnalysisRun[]
 
   @@index([ownerId, updatedAt])
+}
+
+model AnalysisRun {
+  id           String         @id @default(cuid())
+  repositoryId String
+  status       AnalysisStatus @default(PENDING)
+  summary      String?
+  score        Int?
+  completedAt  DateTime?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  repository Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+
+  @@index([repositoryId, createdAt])
+}
+
+enum AnalysisStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
 }

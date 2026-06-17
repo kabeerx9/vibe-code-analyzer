@@ -1,31 +1,34 @@
 import {
   ApiError,
   createApiClient,
-  createExampleProjectInputSchema,
+  createRepositoryInputSchema,
   deleteAccountInputSchema,
-  exampleProjectListSchema,
-  exampleProjectSchema,
+  analysisRunSchema,
   meResponseSchema,
+  repositoryListSchema,
+  repositorySchema,
   updateAccountInputSchema,
-  updateExampleProjectInputSchema,
-  type CreateExampleProjectInput,
+  updateRepositoryInputSchema,
+  type AnalysisRun,
+  type CreateRepositoryInput,
   type DeleteAccountInput,
-  type ExampleProject,
   type MeResponse,
+  type Repository,
   type UpdateAccountInput,
-  type UpdateExampleProjectInput,
+  type UpdateRepositoryInput,
 } from "@codeaudit/contracts";
 import { env } from "@codeaudit/env/web";
 
 import { getClerkAuthToken } from "@/utils/clerk-auth";
 
 export type {
-  CreateExampleProjectInput,
+  AnalysisRun,
+  CreateRepositoryInput,
   DeleteAccountInput,
-  ExampleProject,
   MeResponse,
+  Repository,
   UpdateAccountInput,
-  UpdateExampleProjectInput,
+  UpdateRepositoryInput,
 };
 export { ApiError };
 
@@ -55,28 +58,34 @@ export function deleteAccount(input: DeleteAccountInput) {
   });
 }
 
-export function listExampleProjects() {
-  return api.requestJson("/api/example-projects", exampleProjectListSchema);
+export function listRepositories() {
+  return api.requestJson("/api/repositories", repositoryListSchema);
 }
 
-export function createExampleProject(input: CreateExampleProjectInput) {
-  const body = createExampleProjectInputSchema.parse(input);
-  return api.requestJson("/api/example-projects", exampleProjectSchema, {
+export function createRepository(input: CreateRepositoryInput) {
+  const body = createRepositoryInputSchema.parse(input);
+  return api.requestJson("/api/repositories", repositorySchema, {
     method: "POST",
     body: JSON.stringify(body),
   });
 }
 
-export function updateExampleProject(id: string, input: UpdateExampleProjectInput) {
-  const body = updateExampleProjectInputSchema.parse(input);
-  return api.requestJson(`/api/example-projects/${id}`, exampleProjectSchema, {
+export function updateRepository(id: string, input: UpdateRepositoryInput) {
+  const body = updateRepositoryInputSchema.parse(input);
+  return api.requestJson(`/api/repositories/${id}`, repositorySchema, {
     method: "PATCH",
     body: JSON.stringify(body),
   });
 }
 
-export function deleteExampleProject(id: string) {
-  return api.requestVoid(`/api/example-projects/${id}`, {
+export function deleteRepository(id: string) {
+  return api.requestVoid(`/api/repositories/${id}`, {
     method: "DELETE",
+  });
+}
+
+export function createAnalysisRun(repositoryId: string) {
+  return api.requestJson(`/api/repositories/${repositoryId}/analysis-runs`, analysisRunSchema, {
+    method: "POST",
   });
 }

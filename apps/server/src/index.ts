@@ -4,7 +4,7 @@ import fastifyCors from "@fastify/cors";
 import Fastify from "fastify";
 
 import { registerAccountRoutes } from "@/routes/account";
-import { registerExampleProjectsRoutes } from "@/routes/example-projects";
+import { registerRepositoriesRoutes } from "@/routes/repositories";
 import { registerMeRoutes } from "@/routes/me";
 import { registerClerkWebhookRoutes } from "@/routes/webhooks/clerk";
 
@@ -32,7 +32,7 @@ fastify.get("/", async () => {
 
 fastify.register(registerMeRoutes);
 fastify.register(registerAccountRoutes);
-fastify.register(registerExampleProjectsRoutes);
+fastify.register(registerRepositoriesRoutes);
 fastify.register(registerClerkWebhookRoutes);
 
 fastify.listen({ port: 3000 }, (err) => {

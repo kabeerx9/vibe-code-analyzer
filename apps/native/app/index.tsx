@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 
 import { SignOutButton } from "@/components/sign-out-button";
-import { ExampleProjectsPanel } from "@/components/example-projects";
+import { RepositoriesPanel } from "@/components/repositories";
 import { ApiError, getMe, type MeResponse } from "@/lib/api";
 import { colors } from "@codeaudit/ui/theme/tokens";
 import { sharedStyles } from "@/lib/theme";
@@ -73,7 +73,7 @@ export default function Home() {
         {error ? <Text style={sharedStyles.errorText}>{error}</Text> : null}
       </View>
 
-      <ExampleProjectsPanel />
+      <RepositoriesPanel />
       <SignOutButton />
     </ScrollView>
   );
