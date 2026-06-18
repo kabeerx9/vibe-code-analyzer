@@ -365,9 +365,19 @@ export function RepositoriesPanel() {
                     </View>
                   ))
                 ) : null}
+                {repository.providerOwner && repository.providerName ? (
+                  <Text style={sharedStyles.muted}>
+                    GitHub: {repository.providerOwner}/{repository.providerName}
+                  </Text>
+                ) : null}
                 {repository.latestAnalysisRun?.branch ?? repository.branch ? (
                   <Text style={sharedStyles.muted}>
-                    Branch: {repository.latestAnalysisRun?.branch ?? repository.branch}
+                    Branch: {repository.latestAnalysisRun?.branch ?? repository.defaultBranch ?? repository.branch}
+                  </Text>
+                ) : null}
+                {repository.latestAnalysisRun?.commitSha ?? repository.latestCommitSha ? (
+                  <Text style={sharedStyles.muted}>
+                    Commit: {(repository.latestAnalysisRun?.commitSha ?? repository.latestCommitSha)?.slice(0, 7)}
                   </Text>
                 ) : null}
                 {repository.latestAnalysisRun?.durationMs !== null && repository.latestAnalysisRun?.durationMs !== undefined ? (

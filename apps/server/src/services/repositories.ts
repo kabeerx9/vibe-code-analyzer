@@ -12,6 +12,7 @@ import {
   localRepositoryAnalyzer,
   type RepositoryAnalyzer,
 } from "@/services/analyzer";
+import { importGitHubRepositoryMetadata } from "@/services/github";
 import {
   getOrCreateUserByClerkId,
   type UserProfileInput,
@@ -36,6 +37,38 @@ export type RepositoriesService = {
   deleteByClerkId: (clerkId: string, id: string) => Promise<boolean>;
   createAnalysisRunByClerkId: (clerkId: string, repositoryId: string) => Promise<AnalysisRun | null>;
 };
+
+type RepositoryMetadataInput = {
+  url?: string | null;
+  branch?: string | null;
+};
+
+async function enrichRepositoryMetadata(input: RepositoryMetadataInput) {
+  const metadata = await importGitHubRepositoryMetadata(input.url);
+  if (!metadata) {
+    return {
+      url: input.url ?? null,
+      branch: input.branch ?? null,
+      provider: null,
+      providerRepoId: null,
+      providerOwner: null,
+      providerName: null,
+      defaultBranch: null,
+      latestCommitSha: null,
+    };
+  }
+
+  return {
+    url: metadata.url,
+    branch: input.branch ?? metadata.defaultBranch,
+    provider: "GITHUB" as const,
+    providerRepoId: metadata.repoId,
+    providerOwner: metadata.owner,
+    providerName: metadata.name,
+    defaultBranch: metadata.defaultBranch,
+    latestCommitSha: metadata.latestCommitSha,
+  };
+}
 
 function parseFindings(value: unknown): AnalysisRun["findings"] {
   const parsed = analysisRunSchema.shape.findings.safeParse(value);
@@ -70,6 +103,12 @@ function serializeRepository(repository: RepositoryWithLatestRun): Repository {
     name: repository.name,
     url: repository.url,
     branch: repository.branch,
+    provider: repository.provider,
+    providerRepoId: repository.providerRepoId,
+    providerOwner: repository.providerOwner,
+    providerName: repository.providerName,
+    defaultBranch: repository.defaultBranch,
+    latestCommitSha: repository.latestCommitSha,
     description: repository.description,
     latestAnalysisRun: repository.analysisRuns[0]
       ? serializeAnalysisRun(repository.analysisRuns[0])
@@ -102,12 +141,12 @@ export async function createRepositoryByClerkId(
   syncFromClerk: () => Promise<UserProfileInput>,
 ): Promise<Repository> {
   const owner = await getOrCreateUserByClerkId(clerkId, syncFromClerk);
+  const metadata = await enrichRepositoryMetadata(input);
 
   const repository = await prisma.repository.create({
     data: {
       name: input.name,
-      url: input.url ?? null,
-      branch: input.branch ?? null,
+      ...metadata,
       description: input.description ?? null,
       ownerId: owner.id,
     },
@@ -130,12 +169,19 @@ export async function updateRepositoryByClerkId(
     return null;
   }
 
+  const metadata =
+    input.url !== undefined || input.branch !== undefined
+      ? await enrichRepositoryMetadata({
+          url: input.url !== undefined ? input.url : existing.url,
+          branch: input.branch !== undefined ? input.branch : existing.branch,
+        })
+      : null;
+
   const repository = await prisma.repository.update({
     where: { id: existing.id },
     data: {
       ...(input.name !== undefined ? { name: input.name } : {}),
-      ...(input.url !== undefined ? { url: input.url } : {}),
-      ...(input.branch !== undefined ? { branch: input.branch } : {}),
+      ...(metadata ? metadata : {}),
       ...(input.description !== undefined ? { description: input.description } : {}),
     },
     include: latestRunInclude,

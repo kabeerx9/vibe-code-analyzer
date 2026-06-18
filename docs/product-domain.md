@@ -15,6 +15,12 @@ Fields:
 - `name`
 - `url`
 - `branch`
+- `provider`
+- `providerRepoId`
+- `providerOwner`
+- `providerName`
+- `defaultBranch`
+- `latestCommitSha`
 - `description`
 - `createdAt`
 - `updatedAt`
@@ -55,7 +61,11 @@ Fields:
 
 ## Next Integration Step
 
+GitHub URLs are parsed and imported through
+`apps/server/src/services/github.ts`. The repository service stores imported
+default branch and latest commit metadata when GitHub lookup succeeds.
+
 Replace or extend the local adapter in `apps/server/src/services/analyzer.ts`.
-Keep the route contract stable: enqueue or execute the scan behind
-`createAnalysisRunByClerkId`, persist the structured result, then return an
-`AnalysisRun`.
+Keep the route contract stable: use the stored provider metadata to fetch source
+files, enqueue or execute the scan behind `createAnalysisRunByClerkId`, persist
+the structured result, then return an `AnalysisRun`.

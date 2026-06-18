@@ -28,6 +28,12 @@ model Repository {
   name        String
   url         String?
   branch      String?
+  provider    RepositoryProvider?
+  providerRepoId String?
+  providerOwner  String?
+  providerName   String?
+  defaultBranch  String?
+  latestCommitSha String?
   description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -67,4 +73,8 @@ enum AnalysisStatus {
   RUNNING
   COMPLETED
   FAILED
+}
+
+enum RepositoryProvider {
+  GITHUB
 }

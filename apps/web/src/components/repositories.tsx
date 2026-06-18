@@ -381,8 +381,18 @@ export function RepositoriesPanel() {
                         </ul>
                       ) : null}
                       <div className="flex flex-wrap gap-x-4 gap-y-1 text-muted-foreground">
+                        {repository.providerOwner && repository.providerName ? (
+                          <span>GitHub: {repository.providerOwner}/{repository.providerName}</span>
+                        ) : null}
                         {repository.latestAnalysisRun?.branch ?? repository.branch ? (
-                          <span>Branch: {repository.latestAnalysisRun?.branch ?? repository.branch}</span>
+                          <span>
+                            Branch: {repository.latestAnalysisRun?.branch ?? repository.defaultBranch ?? repository.branch}
+                          </span>
+                        ) : null}
+                        {repository.latestAnalysisRun?.commitSha ?? repository.latestCommitSha ? (
+                          <span>
+                            Commit: {(repository.latestAnalysisRun?.commitSha ?? repository.latestCommitSha)?.slice(0, 7)}
+                          </span>
                         ) : null}
                         {repository.latestAnalysisRun?.durationMs !== null && repository.latestAnalysisRun?.durationMs !== undefined ? (
                           <span>Duration: {repository.latestAnalysisRun.durationMs}ms</span>

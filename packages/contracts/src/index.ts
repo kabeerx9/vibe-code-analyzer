@@ -13,6 +13,7 @@ export {
   createRepositoryInputSchema,
   repositoryIdParamsSchema,
   repositoryListSchema,
+  repositoryProviderSchema,
   repositorySchema,
   updateRepositoryInputSchema,
   type AnalysisFinding,
@@ -23,6 +24,7 @@ export {
   type Repository,
   type RepositoryIdParams,
   type RepositoryList,
+  type RepositoryProvider,
   type UpdateRepositoryInput,
 } from "./repositories";
 export { apiErrorResponseSchema, meResponseSchema, type MeResponse } from "./me";

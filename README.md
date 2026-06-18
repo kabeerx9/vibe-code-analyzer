@@ -9,7 +9,7 @@ An AI-powered code analysis workspace built as a TypeScript monorepo.
 - Fastify API
 - Clerk authentication on web, native, and server
 - Clerk webhook user synchronization with JIT fallback
-- Repository tracking and stubbed analysis runs on web and native
+- Repository tracking with GitHub metadata import and analysis runs on web and native
 - Prisma 7 and PostgreSQL
 - Shared shadcn/ui package
 - Shared, validated environment configuration
@@ -112,9 +112,11 @@ packages/
 
 ## Product Domain
 
-CodeAudit tracks authenticated user-owned repositories. Each repository can
-create analysis runs through `POST /api/repositories/:id/analysis-runs`. The
-current analysis implementation is a deterministic local stub so the API,
-database, and UI workflow are stable before scanner or AI-provider integration.
+CodeAudit tracks authenticated user-owned repositories. GitHub repository URLs
+are imported for provider owner/name, default branch, and latest commit metadata
+when available. Each repository can create analysis runs through
+`POST /api/repositories/:id/analysis-runs`. The current analysis implementation
+is deterministic and local so the API, database, and UI workflow are stable
+before source-file scanning or AI-provider integration.
 
 See [docs/product-domain.md](./docs/product-domain.md).

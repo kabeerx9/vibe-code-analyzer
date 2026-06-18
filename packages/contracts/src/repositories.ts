@@ -30,6 +30,7 @@ const optionalDescriptionSchema = z
   .optional();
 
 export const analysisStatusSchema = z.enum(["PENDING", "RUNNING", "COMPLETED", "FAILED"]);
+export const repositoryProviderSchema = z.enum(["GITHUB"]);
 
 export const analysisSeveritySchema = z.enum(["CRITICAL", "HIGH", "MEDIUM", "LOW"]);
 
@@ -71,6 +72,12 @@ export const repositorySchema = z
     name: z.string(),
     url: z.string().nullable(),
     branch: z.string().nullable(),
+    provider: repositoryProviderSchema.nullable(),
+    providerRepoId: z.string().nullable(),
+    providerOwner: z.string().nullable(),
+    providerName: z.string().nullable(),
+    defaultBranch: z.string().nullable(),
+    latestCommitSha: z.string().nullable(),
     description: z.string().nullable(),
     latestAnalysisRun: analysisRunSchema.nullable(),
     createdAt: z.iso.datetime(),
@@ -110,6 +117,7 @@ export const repositoryIdParamsSchema = z.object({
 });
 
 export type AnalysisStatus = z.infer<typeof analysisStatusSchema>;
+export type RepositoryProvider = z.infer<typeof repositoryProviderSchema>;
 export type AnalysisSeverity = z.infer<typeof analysisSeveritySchema>;
 export type AnalysisFinding = z.infer<typeof analysisFindingSchema>;
 export type AnalysisRun = z.infer<typeof analysisRunSchema>;

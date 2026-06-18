@@ -4,7 +4,17 @@ import type {
   Repository,
 } from "@codeaudit/contracts/repositories";
 
-export type AnalyzerRepositoryInput = Pick<Repository, "id" | "name" | "url" | "branch" | "description">;
+export type AnalyzerRepositoryInput = Pick<
+  Repository,
+  | "id"
+  | "name"
+  | "url"
+  | "branch"
+  | "description"
+  | "provider"
+  | "defaultBranch"
+  | "latestCommitSha"
+>;
 
 export type AnalyzerResult = {
   summary: string;
@@ -37,10 +47,18 @@ const metadataFinding: FindingTemplate = {
 
 const providerFinding: FindingTemplate = {
   severity: "LOW",
-  title: "Scanner provider is not connected",
-  description: "This run used the local analyzer boundary and did not inspect source files yet.",
+  title: "Source scanner is not connected",
+  description: "GitHub metadata was imported, but this run did not inspect repository source files yet.",
   path: null,
-  recommendation: "Connect a Git provider or uploaded source scanner behind the analyzer adapter.",
+  recommendation: "Use the imported GitHub branch and commit to fetch source files in the next analyzer adapter.",
+};
+
+const unsupportedProviderFinding: FindingTemplate = {
+  severity: "MEDIUM",
+  title: "Repository provider was not imported",
+  description: "This repository was analyzed from manually-entered metadata only.",
+  path: null,
+  recommendation: "Use a GitHub repository URL so CodeAudit can import branch and commit metadata automatically.",
 };
 
 const documentationFinding: FindingTemplate = {
@@ -68,9 +86,17 @@ function calculateScore(findings: AnalysisFinding[]): number {
 export const localRepositoryAnalyzer: RepositoryAnalyzer = {
   async analyze(repository) {
     const startedAt = Date.now();
-    const findings: AnalysisFinding[] = [providerFinding];
+    const findings: AnalysisFinding[] = [];
 
-    if (!repository.url || !repository.branch) {
+    if (repository.provider === "GITHUB") {
+      findings.push(providerFinding);
+    } else {
+      findings.push(unsupportedProviderFinding);
+    }
+
+    const branch = repository.defaultBranch ?? repository.branch;
+
+    if (!repository.url || !branch) {
       findings.push(metadataFinding);
     }
 
@@ -87,8 +113,8 @@ export const localRepositoryAnalyzer: RepositoryAnalyzer = {
     return {
       summary,
       score,
-      commitSha: null,
-      branch: repository.branch,
+      commitSha: repository.latestCommitSha,
+      branch,
       durationMs: Math.max(1, Date.now() - startedAt),
       findings,
     };
