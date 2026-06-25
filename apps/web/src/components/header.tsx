@@ -18,6 +18,12 @@ export default function Header() {
         </Link>
         <nav className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
           <Link
+            to="/landing-page"
+            className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
+          >
+            Landing page
+          </Link>
+          <Link
             to="/design-system"
             className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
           >
