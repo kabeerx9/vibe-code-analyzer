@@ -9,14 +9,20 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background">
-      <div className="container-marketing flex h-16 items-center justify-between">
+      <div className="container-marketing flex min-h-16 flex-wrap items-center justify-between gap-3 py-3">
         <Link
           to={isSignedIn ? "/home" : "/"}
           className="text-lg font-semibold tracking-tight text-foreground"
         >
           CodeAudit
         </Link>
-        <nav className="flex items-center gap-3">
+        <nav className="flex flex-wrap items-center justify-end gap-2 sm:gap-3">
+          <Link
+            to="/design-system"
+            className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
+          >
+            Design system
+          </Link>
           {isSignedIn ? (
             <Link
               to="/home"
